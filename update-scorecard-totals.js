@@ -1,12 +1,13 @@
 const request = require('request')
+//changed via git
 
 module.exports = (context, cb) => {
-  
+
   const node = context.body.data.Score.node
   const newPoints = node.value
   const previousUserScorecardTotal = node.scorecard.total
   const previousCommunityScorecardTotal = node.scorecard.communityMeta.total
-  
+
   //To be used in mutation:
   const userScorecardId = node.scorecard.id
   const newUserScorecardTotal = previousUserScorecardTotal + newPoints
@@ -20,7 +21,7 @@ module.exports = (context, cb) => {
 
   const endpoint = 'https://api.graph.cool/simple/v1/cj227dcizzdoo0164hyn8cef7'
   // const token = 'Bearer __PERMANENT_AUTH_TOKEN__'
-  
+
   const mutation = `mutation {
     updateScorecard(id:"${userScorecardId}", total:${newUserScorecardTotal}){
       id
@@ -31,7 +32,7 @@ module.exports = (context, cb) => {
       total
     }
   }`
-  
+
    request.post({
     url: endpoint,
     headers: {
