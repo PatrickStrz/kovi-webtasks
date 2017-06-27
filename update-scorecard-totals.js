@@ -1,6 +1,5 @@
 const request = require('request')
 
-
 module.exports = (context, cb) => {
 
   const node = context.body.data.Score.node
@@ -18,6 +17,7 @@ module.exports = (context, cb) => {
   console.log('previousUserScorecardTotal:'+ previousUserScorecardTotal)
   console.log('previousCommunityScorecardTotal:'+ previousCommunityScorecardTotal)
   console.log('--------------------------------------------------')
+  console.log('running')
 
   const endpoint = 'https://api.graph.cool/simple/v1/cj227dcizzdoo0164hyn8cef7'
   // const token = 'Bearer __PERMANENT_AUTH_TOKEN__'
