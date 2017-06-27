@@ -2,6 +2,7 @@ const request = require('request')
 //Testing gh integration
 //Testing disconnect intergration
 //Testing multiple commmits for disconnect intergration
+//testing manual sync
 
 module.exports = (context, cb) => {
 
