@@ -4,35 +4,35 @@ module.exports = (context, cb) => {
 
   const node = context.body.data.Score.node
   const newPoints = node.value
-  const previousUserScorecardTotal = node.scorecard.total
-  const previousCommunityScorecardTotal = node.scorecard.communityMeta.total
+  const previousScorecardTotal = node.scorecard.total
+  const previousCommunityAggregateTotal = node.scorecard.communityAggregate.scoreTotal
 
   //To be used in mutation:
   const userScorecardId = node.scorecard.id
-  const newUserScorecardTotal = previousUserScorecardTotal + newPoints
-  const communityScorecardId = node.scorecard.communityMeta.id
-  const newCommunityScorecardTotal = previousCommunityScorecardTotal + newPoints
+  const newScorecardTotal = previousScorecardTotal + newPoints
+  const communityAggregateId = node.scorecard.communityAggregate.id
+  const newCommunityAggregateTotal = previousCommunityAggregateTotal + newPoints
 
   console.log('newpoints:'+ newPoints)
-  console.log('previousUserScorecardTotal:'+ previousUserScorecardTotal)
-  console.log('previousCommunityScorecardTotal:'+ previousCommunityScorecardTotal)
-  console.log('--------------------------------------------------')
-  console.log('running')
+  console.log('previousScorecardTotal:'+ previousScorecardTotal)
+  console.log('previousCommunityAggregateTotal:'+ previousCommunityAggregateTotal)
+  console.log('-------------------------------------------------------------------')
 
-  const endpoint = 'https://api.graph.cool/simple/v1/cj227dcizzdoo0164hyn8cef7'
+  const endpoint = 'https://api.graph.cool/simple/v1/cj2hsn8pvak4o0187k52n2i3l'
   // const token = 'Bearer __PERMANENT_AUTH_TOKEN__'
 
-  const mutation = `mutation {
-    updateScorecard(id:"${userScorecardId}", total:${newUserScorecardTotal}){
-      id
-      total
-    }
-    updateCommunityMeta(id:"${communityScorecardId}",total:${newCommunityScorecardTotal}){
-      id
-      total
-    }
-  }`
-
+  const mutation = `
+    mutation {
+      updateScorecard(id:"${userScorecardId}", total:${newScorecardTotal}){
+        id
+        total
+      }
+      updateCommunityAggregate(id:"${communityAggregateId}",scoreTotal:${newCommunityAggregateTotal}){
+        id
+        scoreTotal
+        }
+    }`
+    
    request.post({
     url: endpoint,
     headers: {
