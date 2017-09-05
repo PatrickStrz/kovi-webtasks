@@ -1,3 +1,6 @@
+'use latest';
+ //so use es6
+
 // This webtask is called from a graphcool server side subscription with an event in the
 //shape of:
 // {
@@ -22,6 +25,27 @@
 const request = require('request')
 
 module.exports = (context, cb) => {
+  // console.log('headers:'+JSON.stringify(context.headers))
+
+
+  // environment dependent variables:
+  const env = context.headers.env
+  
+  let endpoint
+  let authToken
+  
+  if (env == 'production'){
+    endpoint = context.secrets.KOVI_PRODUCTION_ENDPOINT
+    authToken = context.secrets.PRODUCTION_PERMANENT_AUTH_TOKEN
+    console.log('----- PRODUCTION FUNCTION INVOCATION -----')
+  }
+  
+  else if (env == 'dev'){
+    endpoint = context.secrets.KOVI_DEV_ENDPOINT
+    authToken = context.secrets.DEV_PERMANENT_AUTH_TOKEN
+    console.log('----- DEV FUNCTION INVOCATION -----')
+  }
+  
   const node = context.body.data.Score.node
   const newPoints = node.value
   const previousScorecardTotal = node.scorecard.total
@@ -30,11 +54,12 @@ module.exports = (context, cb) => {
   const userScorecardId = node.scorecard.id
   const newScorecardTotal = previousScorecardTotal + newPoints
 
+  console.log('scorecard:'+userScorecardId)
   console.log('newpoints:'+ newPoints)
   console.log('previousScorecardTotal:'+ previousScorecardTotal)
+  console.log('newScorecardTotal:'+ newScorecardTotal)
   console.log('-------------------------------------------------------------------')
 
-  const endpoint = 'https://api.graph.cool/simple/v1/cj541g35wjwqc01754kb4rfvk'
 
   const mutation = `
     mutation {
@@ -47,15 +72,15 @@ module.exports = (context, cb) => {
    request.post({
     url: endpoint,
     headers: {
-      // 'Authorization' : token,
       'content-type': 'application/json',
+      'Authorization': `Bearer ${authToken}`,
     },
     body: JSON.stringify({query: mutation}),
   }).on('error', (e) => {
     console.log('Error updating scorecards: ' + e.toString())
     cb(e, {error: e.toString()})
   }).on('data', (response) => {
-    console.log(JSON.parse(response).data)
+    console.log(JSON.parse(response))
     cb(null, {response: JSON.parse(response).data})
   })
 }
